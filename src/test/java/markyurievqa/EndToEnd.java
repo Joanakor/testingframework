@@ -1,6 +1,7 @@
 package markyurievqa;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,6 +19,7 @@ public class EndToEnd {
         String password = "Minecraft158!";
 
         WebDriver driver = new ChromeDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
 
@@ -30,9 +32,12 @@ public class EndToEnd {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(".card-body b")));
 
         List<WebElement> products = driver.findElements(By.cssSelector(".card"));
-        products.stream().map(x -> x.findElement(By.cssSelector(".card-body b")).getText()).forEach(System.out::println);
 
-        
+        WebElement product = products.stream().filter(x -> x.findElement(By.cssSelector(".card-body b")).getText().equals("ZARA COAT 3")).findFirst().orElse(null);
+
+        js.executeScript("arguments[0].scrollIntoView();", product.findElement(By.cssSelector("button:nth-of-type(2)")));
+
+        product.findElement(By.cssSelector("button:nth-of-type(2)")).click();
     }
 
 }
